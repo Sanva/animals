@@ -4,7 +4,7 @@ Animals
 This is a frankenstein demo app where I'm mixing what I'm learning
 about 2D and 3D graphics programming using Haxe and Kha.
 
-The ultimate goal will be to create a basic 2D oriented 3D game engine,
+The ultimate goal could be to create a basic 2D oriented 3D game engine,
 to explore 2D and 3D graphics programming with an incredible
 multiplatform support.
 
@@ -14,7 +14,9 @@ objects moving around. You can test it online at
 https://lab.sanva.now.sh/animals.html (~3 MB) . There is also
 an Android APK at the bottom — please, take into account
 that both the APK link and the HMTL version could be
-more up to date than this code.
+more up to date than this code. Also, this is only a
+proof of concept of Haxe & Kha multiplatform capabilities,
+I have no clear plans about continuing this thing.
 
 **Beware**, this is quick and dirty, I'm learning really disparate
 stuff and I'm not caring about architecture or design patterns,
