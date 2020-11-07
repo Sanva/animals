@@ -44,16 +44,16 @@ class PlayerSprite extends Sprite {
 
     if (maxVelocity > 0) {
 
-      this.animationPosition += maxVelocity * delta * this.speed / 60;
-      if (this.animationPosition > 1) {
+      this.animationPosition += maxVelocity * delta * this.speed / 100;
+      if (this.animationPosition >= 1.5) {
 
-        this.animationPosition -= 2;
+        this.animationPosition -= 3;
 
       }
 
     }
 
-    this.spritesheetIndex = this.animationPosition.floor();
+    this.spritesheetIndex = this.animationPosition.round();
     this.spritesheetIndex += switch (this.direction) {
 
       case Up: 13;
