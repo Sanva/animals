@@ -16,12 +16,16 @@ typedef GamepadProps = {
 
 class Gamepad extends Block {
 
+  public var scale:Float;
+
   // public final crossButton:CrossButton;
   public final joystick:Joystick;
 
 	public function new(props:GamepadProps) {
 
     super(props);
+
+    this.scale = props.scale;
 
     final crossButtonSize = this.height - 25 * props.scale;
 
@@ -38,19 +42,32 @@ class Gamepad extends Block {
     // });
 
     this.joystick = new Joystick({
-      // x: this.minX + (crossButtonSize * 0.5 + 20 * props.scale).round(),
-      x: (this.x - this.width / 4).round(),
-      y: this.y,
-      width: (crossButtonSize * 0.5).round(),
-      height: (crossButtonSize * 0.5).round(),
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0,
+      outerRadius: 0,
+      innerRadius: 0,
       pressedColor: props.pressedColor,
       active: this.active,
       rotating: false,
       color: Color.Yellow,
       upOutsideBounds: true,
-      outerRadius: (crossButtonSize * 0.5).round(),
-      innerRadius: (crossButtonSize * 0.5 * 0.666).round(),
     });
+    this.setupLayout();
+
+  }
+
+  function setupLayout() {
+
+    final size = ((this.height - 25 * this.scale) * 0.5).round();
+
+    this.joystick.x = (this.x - this.width / 4).round();
+    this.joystick.y = this.y;
+    this.joystick.width = size;
+    this.joystick.height = size;
+    this.joystick.outerRadius = size;
+    this.joystick.innerRadius = ((this.height - 25 * this.scale) * 0.5 * 0.666).round();
 
   }
 
@@ -71,6 +88,19 @@ class Gamepad extends Block {
   public function onMouseMove(xPos:Int, yPos:Int, moveX:Int, moveY:Int) {
 
     this.joystick.onMouseMove(xPos, yPos, moveX, moveY);
+
+  }
+
+  public function onWindowResize(width:Int, height:Int) {
+
+    final heightQuarter = height / 4;
+
+    this.x = (width * 0.5).round();
+    this.y = (height - heightQuarter + heightQuarter * 0.5).round();
+    this.width = width;
+    this.height = heightQuarter.round();
+
+    this.setupLayout();
 
   }
 

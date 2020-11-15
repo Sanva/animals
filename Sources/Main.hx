@@ -91,6 +91,13 @@ class Main {
 
   var scale:Float;
 
+  #if kha_android_native
+
+  var windowWidth:Int;
+  var windowHeight:Int;
+
+  #end
+
   final gamepad:Gamepad;
 
   // final whiteNoiseChannel:AudioChannel;
@@ -148,7 +155,12 @@ class Main {
     // this.sineWaveChannel.volume = 1;
 
     #if kha_android_native
+
+    this.windowWidth = System.windowWidth();
+    this.windowHeight = System.windowHeight();
+
     this.scale = kha.Display.primary.pixelsPerInch / 160;
+
     #elseif kha_html5
     this.scale = js.Syntax.code('window.devicePixelRatio') == 1 ? 1 : 2;
     #else
@@ -181,8 +193,8 @@ class Main {
     final buttonWidth = (64 * this.scale).round();
     final buttonHeight = (64 * this.scale).round();
     this.button = new Button({
-      x: (System.windowWidth() / 4 * 3).round(),
-      y: (System.windowHeight() - windowHeightQuarter + windowHeightQuarter / 2).round(),
+      x: 0,
+      y: 0,
       width: buttonWidth,
       height: buttonHeight,
       active: true,
@@ -196,10 +208,10 @@ class Main {
     });
 
     this.gamepad = new Gamepad({
-      x: (System.windowWidth() / 2 - (System.windowWidth() - this.contextMenuRect.x)).round(),
-      y: (System.windowHeight() - windowHeightQuarter + windowHeightQuarter / 2).round(),
-      width: System.windowWidth(),
-      height: windowHeightQuarter.round(),
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0,
       active: #if kha_android_native true #else true #end,
       color: Color.fromBytes(100, 100, 100, 100),
       pressedColor: Color.fromBytes(100, 100, 100, 50),
@@ -227,6 +239,8 @@ class Main {
     this.mainScene = new MainScene({
       scale: this.scale,
     });
+
+    this.onWindowResize(System.windowWidth(), System.windowHeight());
 
     this.fadeIn(0.66);
 
@@ -374,6 +388,16 @@ class Main {
 
   function onWindowResize(width:Int, height:Int) {
 
+    this.contextMenuRect.height = height;
+
+    final x = this.contextMenuIsOpen ? width - this.contextMenuRect.width : width;
+    this.contextMenuRect.setPosition(x, this.contextMenuRect.y);
+
+    this.gamepad.onWindowResize(width, height);
+
+    this.button.x = (width * 0.25 * 3).round();
+    this.button.y = (height - height * 0.25 + height * 0.25 * 0.5).round();
+
     this.mainScene.onWindowResize(width, height);
 
   }
@@ -402,6 +426,21 @@ class Main {
       this.timeOneSecond = 0;
 
     }
+
+    #if kha_android_native
+
+    /**
+     * This is to catch screen rotation, see → https://github.com/Kode/Kha/issues/1265 .
+     */
+    if (System.windowWidth() != this.windowWidth || System.windowHeight() != this.windowHeight) {
+
+      this.windowWidth = System.windowWidth();
+      this.windowHeight = System.windowHeight();
+      this.onWindowResize(this.windowWidth, this.windowHeight);
+
+    }
+
+    #end
 
     if (this.mainScene.activeObject != null) {
 
@@ -551,7 +590,7 @@ class Main {
       (this.contextMenuRect.x - 50 * this.scale).round(),
       0,
       (50 * this.scale).round(),
-      (25 * this.scale).round()
+      (28 * this.scale).round()
     )) {
 
       if (this.ui.button(this.contextMenuIsOpen ? '>>>' : '<<<')) {
@@ -575,8 +614,8 @@ class Main {
       final fpsText = 'FPS: ${this.fps}';
       graphics.drawString(
         fpsText,
-        (this.contextMenuRect.x - graphics.font.width(graphics.fontSize, fpsText) - 2 * this.scale).round(),
-        (30 * this.scale).round()
+        (this.contextMenuRect.x - graphics.font.width(graphics.fontSize, fpsText) - 8 * this.scale).round(),
+        (32 * this.scale).round()
       );
 
       graphics.end();
@@ -590,7 +629,7 @@ class Main {
     if (this.contextMenuIsOpen) {
 
       this.contextMenuIsOpen = false;
-      this.contextMenuRect.move(System.windowWidth(), this.contextMenuRect.y, 0.2);
+      this.contextMenuRect.move(System.windowWidth() + 5, this.contextMenuRect.y, 0.2);
 
     } else {
 

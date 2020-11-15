@@ -38,6 +38,13 @@ class Rectangle {
 
   }
 
+  public function setPosition(x:Int, y:Int) {
+
+    this.x = this.destinationX = x;
+    this.y = this.destinationY = y;
+
+  }
+
   public function move(x:Int, y:Int, easing:Float = 1.0) {
 
     this.destinationX = x;

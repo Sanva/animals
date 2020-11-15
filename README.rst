@@ -144,9 +144,6 @@ Known issues
   audio in platforms other than
   HTML5.
 
-- Window resize and screen rotation
-  are badly supported.
-
 - Mesh baching is really incomplete.
 
 - Context menu scrolling doesn't work
