@@ -157,9 +157,12 @@ class RenderBatch {
 
     }
 
+    final vertexBuffer = this.getVertexBuffer();
+    final indexBuffer = this.getIndexBuffer();
+
     graphics.setPipeline(this.pipeline);
-		graphics.setVertexBuffer(this.getVertexBuffer());
-    graphics.setIndexBuffer(this.getIndexBuffer());
+    graphics.setVertexBuffer(vertexBuffer);
+    graphics.setIndexBuffer(indexBuffer);
 
     var objectOffset = 0;
     for (object in this.objects) {
@@ -174,13 +177,16 @@ class RenderBatch {
        * This call shouldn't be needed, it's a bug
        * in Kha → http://forum.kode.tech/topic/355/how-to-do-batch-rendering-with-g4
        */
-      graphics.setVertexBuffer(this.getVertexBuffer());
+      graphics.setVertexBuffer(vertexBuffer);
 
       graphics.drawIndexedVertices(objectOffset, object.indicesCount);
 
       objectOffset += object.indicesCount;
 
     }
+
+    vertexBuffer.delete();
+    indexBuffer.delete();
 
   }
 
