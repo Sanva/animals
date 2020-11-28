@@ -283,7 +283,7 @@ class SpriteGui {
     this.sprite.rotationSpeed = ui.slider(this.rotationHandle, 'Rotation speed', 0, 10, true);
     this.sprite.speed = ui.slider(this.speedHandle, 'Movement speed', 0, 1000, true);
 
-    if (this.setAsActive != null && ui.button('Enable joystick control')) {
+    if (this.setAsActive != null && ui.button('Enable Gamepad')) {
 
       this.setAsActive();
 

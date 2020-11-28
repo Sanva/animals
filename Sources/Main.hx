@@ -454,6 +454,18 @@ class Main {
 
         this.mainScene.activeObject.velocity.x = 0;
 
+        if (this.leftKey) {
+
+          this.mainScene.activeObject.velocity.x -= 1;
+
+        }
+
+        if (this.rightKey) {
+
+          this.mainScene.activeObject.velocity.x += 1;
+
+        }
+
       }
 
       if (this.gamepad.joystick.movementY.abs() >= 0.1) {
@@ -463,6 +475,18 @@ class Main {
       } else {
 
         this.mainScene.activeObject.velocity.y = 0;
+
+        if (this.upKey) {
+
+          this.mainScene.activeObject.velocity.y -= 1;
+
+        }
+
+        if (this.downKey) {
+
+          this.mainScene.activeObject.velocity.y += 1;
+
+        }
 
       }
 
