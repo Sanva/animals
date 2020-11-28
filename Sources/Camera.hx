@@ -23,8 +23,8 @@ class Camera {
 
 	public function new(props:CameraProps) {
 
-		this.x = props.x;
-		this.y = props.y;
+		this.x = this.destinationX = props.x;
+		this.y = this.destinationY = props.y;
 
   }
 

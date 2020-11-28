@@ -33,6 +33,9 @@ class Camera02 {
 	public function new(props:Camera02Props) {
 
     this.position = props.position;
+    this.destinationX = this.position.x;
+    this.destinationY = this.position.y;
+
     this.tilePixels = props.tilePixels;
     this.widthTiles = props.widthTiles;
     this.heightTiles = props.heightTiles;
@@ -46,11 +49,14 @@ class Camera02 {
 
   public function adjustProjection() {
 
+    final w = this.widthTiles * 0.5;
+    final h = this.heightTiles * 0.5;
+
     this.projection = FastMatrix4.orthogonalProjection(
-      -(this.widthTiles / 2).fround(),
-      (this.widthTiles / 2).fround(),
-      (this.heightTiles / 2).fround(),
-      -(this.heightTiles / 2).fround(),
+      -w.ffloor(),
+      w.fceil(),
+      h.ffloor(),
+      -h.fceil(),
       -1000,
       1000
     );
@@ -64,6 +70,8 @@ class Camera02 {
   }
 
   public function getViewMatrix() {
+
+
 
     final cameraFront = new FastVector3(0, 0, -1);
     final cameraUp = new FastVector3(0, 1, 0);
