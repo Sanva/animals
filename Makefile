@@ -16,11 +16,17 @@ android-hl:
 linux:
 	node ~/app/Kha/make linux-native --compile
 
+linux-debug:
+	node ~/app/Kha/make linux-native --debug --compile
+
 linux-armory:
 	node ~/app/ArmorySDK-git/Kha/make linux-native --compile
 
 run-linux:
 	cd ./build/linux-native && ../linux-native-build/Release/${NAME}
+
+run-linux-debug:
+	cd ./build/linux-native && ../linux-native-build/Debug/${NAME}
 
 linux-hl:
 	node ~/app/Kha/make linux-hl --compile
