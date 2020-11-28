@@ -127,6 +127,8 @@ class Main {
   final contextMenuRect:Rectangle;
   var contextMenuIsOpen:Bool = false;
 
+  var backgroundColor:Color = Color.Pink;
+
   function new() {
 
     // final whiteNoise = new Sound();
@@ -497,7 +499,7 @@ class Main {
 
     final g = frames[0].g4;
     g.begin();
-    g.clear(Color.Pink, 1.0);
+    g.clear(this.backgroundColor, 1.0);
     // g.clear(Color.Pink, Math.POSITIVE_INFINITY);
 
     if (this.mainScene.shaderBlock.active) {
@@ -578,6 +580,12 @@ class Main {
         this.ui.text('Screen: ${ScreenCanvas.the.width} × ${ScreenCanvas.the.height}');
         this.ui.text('Display: ${Display.primary.width} × ${Display.primary.height}');
         this.ui.text('Scale: ${this.scale}');
+
+      }
+
+      if (this.ui.panel(Id.handle({selected: false}), 'Background Color')) {
+
+        this.backgroundColor = Ext.colorWheel(this.ui, Id.handle({color: this.backgroundColor}));
 
       }
 
