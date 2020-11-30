@@ -9,6 +9,7 @@ import kha.Color;
 import kha.FastFloat;
 import zui.Zui;
 
+using FastVector2Tools;
 using Math;
 
 typedef SpriteProps = {
@@ -230,8 +231,39 @@ class Sprite extends GameObject {
     /**
      * @fixme This should not be always recalculated.
      */
-     this.buildTransformations();
-     this.verticesPositions = this.getVerticesPositions();
+    this.buildTransformations();
+    this.verticesPositions = this.getVerticesPositions();
+
+  }
+
+  public function renderDebug(g2:Graphics2) {
+
+    final origin = new FastVector2(this.position.x * this.uiScale, this.position.y * this.uiScale);
+    final minX = this.minX * this.uiScale;
+    final minY = this.minY * this.uiScale;
+    final maxX = this.maxX * this.uiScale;
+    final maxY = this.maxY * this.uiScale;
+
+    final a = new FastVector2(minX, minY);
+    a.rotate(this.rotation, origin);
+
+    final b = new FastVector2(maxX, minY);
+    b.rotate(this.rotation, origin);
+
+    final c = new FastVector2(maxX, maxY);
+    c.rotate(this.rotation, origin);
+
+    final d = new FastVector2(minX, maxY);
+    d.rotate(this.rotation, origin);
+
+    g2.color = Color.Red;
+
+    g2.drawLine(a.x.fround(), a.y.fround(), b.x.fround(), b.y.fround(), this.uiScale);
+    g2.drawLine(b.x.fround(), b.y.fround(), c.x.fround(), c.y.fround(), this.uiScale);
+    g2.drawLine(c.x.fround(), c.y.fround(), d.x.fround(), d.y.fround(), this.uiScale);
+    g2.drawLine(d.x.fround(), d.y.fround(), a.x.fround(), a.y.fround(), this.uiScale);
+
+    g2.drawLine(a.x.fround(), a.y.fround(), c.x.fround(), c.y.fround(), this.uiScale);
 
   }
 
