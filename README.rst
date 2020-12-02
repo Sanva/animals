@@ -81,7 +81,10 @@ Options:
   system. Those sounds would
   be also very annoying, by the way.
 
-- *Grid* is a shame.
+- *Grid* allows you to paint a 2D grid,
+  optionally with a subgrid and
+  also labels to see world XY
+  coordinates.
 
 - *Audio* allows you to play
   a song, controlling it's volume.
@@ -138,7 +141,8 @@ Known issues
   also very annoying when playing some
   of them at the same time.
 
-- The grid is a shame in every way.
+- The grid implementation doesn't convince me
+  so much...
 
 - No link to YouTube video of playable
   audio in platforms other than

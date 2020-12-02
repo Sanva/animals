@@ -235,14 +235,15 @@ class MainScene extends Scene {
     this.concentricCirclesGui = new ConcentricCirclesGui(this.concentricCircles);
 
     this.debugGrid = new DebugGrid({
-      x: -1000,
-      y: -1000,
+      x: 0,
+      y: 0,
       width: 1000,
       height: 1000,
-      step: 100,
-      scale: this.scale,
       color: Color.Black,
-      active: false,
+      active: true,
+      labels: false,
+      subgrid: false,
+      scale: this.scale,
     });
 
     this.debugGridGui = new DebugGridGui(this.debugGrid);
@@ -298,6 +299,8 @@ class MainScene extends Scene {
     this.shaderCamera.heightTiles = (height / this.scale).round();
     this.shaderCamera.adjustProjection();
 
+    this.debugGrid.resize((width / this.scale).round(), (height / this.scale).round());
+
   }
 
   public function getActiveObjects():Array<GameObject> {
@@ -340,6 +343,7 @@ class MainScene extends Scene {
     final windowHeight = System.windowHeight();
 
     this.block.update(delta);
+    this.debugGrid.update(delta);
     this.balls.update(delta);
     this.concentricCircles.update(delta);
     this.dogBehaviour.update(delta);
@@ -376,16 +380,21 @@ class MainScene extends Scene {
         0.2
       );
 
-      this.shaderCamera.move(
-        (this.activeObject.position.x + this.rightCameraMargin / this.scale / 2).round(),
-        (this.activeObject.position.y).round(),
-        0.2
-      );
+      final shaderCameraX = (this.activeObject.position.x + this.rightCameraMargin / this.scale * 0.5).round();
+      final shaderCameraY = (this.activeObject.position.y).round();
+
+      this.shaderCamera.move(shaderCameraX, shaderCameraY, 0.2);
+      this.debugGrid.move(shaderCameraX, shaderCameraY);
 
     } else if (this.player != null) {
 
       this.camera.move(((windowWidth - this.rightCameraMargin) / 2 - this.player.x).round(), (windowHeight / 2 - this.player.y).round(), 0.2);
-      this.shaderCamera.move((this.player.x / this.scale + this.rightCameraMargin / this.scale / 2).round(), (this.player.y / this.scale).round(), 0.2);
+
+      final shaderCameraX = (this.player.x / this.scale + this.rightCameraMargin / this.scale * 0.5).round();
+      final shaderCameraY = (this.player.y / this.scale).round();
+
+      this.shaderCamera.move(shaderCameraX, shaderCameraY, 0.2);
+      this.debugGrid.move(shaderCameraX, shaderCameraY);
 
     }
 

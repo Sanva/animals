@@ -2,58 +2,132 @@
 import Block;
 
 import kha.graphics2.Graphics;
+import kha.Color;
 import zui.Id;
-import zui.Ext;
 import zui.Zui;
 
 using Math;
 
 typedef DebugGridProps = {
   > BlockProps,
-  step:Float,
   scale:Float,
+  ?labels:Bool,
+  ?subgrid:Bool,
 }
 
 class DebugGrid extends Block {
 
-  public var step:Float;
+  public var labels:Bool;
+  public var subgrid:Bool;
   public var scale:Float;
 
   public function new(props:DebugGridProps) {
 
     super(props);
 
-    this.step = props.step;
+    this.labels = props.labels == null ? false : props.labels;
+    this.subgrid = props.subgrid == null ? false : props.subgrid;
     this.scale = props.scale;
 
   }
 
-  /**
-   * @todo Fix this shit.
-   *
-   * @param graphics
-   */
+  public function move(x:Int, y:Int) {
+
+    this.x = this.roundOneHundred((x * this.scale).round());
+    this.y = this.roundOneHundred((y * this.scale).round());
+
+  }
+
+  private inline function roundOneHundred(value:Int):Int {
+
+    return ((value / this.scale * 0.01).fround() * 100 * this.scale).round();
+
+  }
+
+  public function resize(width:Int, height:Int) {
+
+    this.width = this.roundTwoHundreds((width * this.scale).round());
+    this.height = this.roundTwoHundreds((height * this.scale).round());
+
+  }
+
+  private inline function roundTwoHundreds(value:Int):Int {
+
+    return (((value / this.scale * 0.01).fround() * 0.5 * this.scale).round() * 200 * this.scale).round();
+
+  }
+
   public override function drawShape(graphics:Graphics) {
 
-    graphics.font = kha.Assets.fonts.RussoOne_Regular;
-    graphics.fontSize = (12 * this.scale).ceil();
+    final minX = this.minX - 100 * this.scale;
+    final minY = this.minY - 100 * this.scale;
+    final maxX = this.maxX + 100 * this.scale;
+    final maxY = this.maxY + 100 * this.scale;
+    var i;
 
-    final count = (this.width * this.scale / this.step * this.scale).round();
-    for (i in 0...count) {
+    if (this.subgrid) {
 
-      final stepI = this.step * this.scale * i;
-      final stepX = stepI + this.x * this.scale;
-      final stepY = stepI + this.y * this.scale;
+      graphics.color = Color.fromBytes(14, 14, 14);
 
-      graphics.drawLine(stepX, this.y * this.scale, stepX, this.height * this.scale);
-      graphics.drawLine(this.x * this.scale, stepY, this.width * this.scale, stepY);
+      final step = 20 * this.scale;
 
-      for (j in 0...count) {
+      i = minX;
+      while (i <= maxX) {
 
-        final stepXText = stepI + this.x * this.scale;
-        final stepYText = this.step * this.scale * j + this.y * this.scale;
+        graphics.drawLine(i, minY, i, maxY, this.scale);
+        i += step;
 
-        graphics.drawString('(${stepXText}, ${stepYText})', stepXText + 5 * this.scale, stepYText + 5 * this.scale);
+      }
+
+      i = minY;
+      while (i <= maxY) {
+
+        graphics.drawLine(minX, i, maxX, i, this.scale);
+        i += step;
+
+      }
+
+    }
+
+    graphics.color = Color.fromBytes(7, 7, 7);
+
+    final step = 100 * this.scale;
+
+    i = minX;
+    while (i <= maxX) {
+
+      graphics.drawLine(i, minY, i, maxY, 1.5 * this.scale);
+      i += step;
+
+    }
+
+    i = minY;
+    while (i <= maxY) {
+
+      graphics.drawLine(minX, i, maxX, i, 1.5 * this.scale);
+      i += step;
+
+    }
+
+    if (this.labels) {
+
+      graphics.font = kha.Assets.fonts.RussoOne_Regular;
+      graphics.fontSize = (12 * this.scale).round();
+
+      final textOffset = (5 * this.scale).round();
+
+      i = minX;
+      while (i < maxX) {
+
+        var j = minY;
+        while (j < maxY) {
+
+          graphics.drawString('(${i}, ${j})', i + textOffset, j + textOffset);
+          j += step;
+
+        }
+
+        i += step;
 
       }
 
@@ -68,41 +142,28 @@ class DebugGridGui {
   final debugGrid:DebugGrid;
 
   final activeHandle:Handle;
-  final sizeHandle:Handle;
-  final colorHandle:Handle;
-  final stepHandle:Handle;
+  final labelsHandle:Handle;
+  final subgridHandle:Handle;
+  final scaleHandle:Handle;
 
   public function new(debugGrid:DebugGrid) {
 
     this.debugGrid = debugGrid;
 
     this.activeHandle = Id.handle({selected: this.debugGrid.active});
-    this.colorHandle = Id.handle({color: debugGrid.color});
-    this.sizeHandle = Id.handle({value: debugGrid.width});
-    this.stepHandle = Id.handle({value: this.debugGrid.step});
+    this.labelsHandle = Id.handle({selected: this.debugGrid.labels});
+    this.subgridHandle = Id.handle({selected: this.debugGrid.subgrid});
+    this.scaleHandle = Id.handle({value: this.debugGrid.scale});
 
   }
 
   public function render(ui:Zui, scale:Float) {
 
     this.debugGrid.active = ui.check(this.activeHandle, 'Visible');
-    this.debugGrid.step = Math.round(ui.slider(this.stepHandle, 'Step', 100, 500, true) * scale);
-
-    final size = Math.round(ui.slider(this.sizeHandle, 'Size', 100, 50000, true) * scale);
-    this.debugGrid.width = size;
-    this.debugGrid.height = size;
-
-    final offset = (-size / 2).round();
-    this.debugGrid.x = offset;
-    this.debugGrid.y = offset;
-
-    if (ui.panel(Id.handle({selected: false}), 'Color')) {
-
-      this.debugGrid.color = Ext.colorWheel(ui, this.colorHandle);
-
-    }
+    this.debugGrid.labels = ui.check(this.labelsHandle, 'Draw labels');
+    this.debugGrid.subgrid = ui.check(this.subgridHandle, 'Draw subgrid');
+    this.debugGrid.scale = ui.slider(this.scaleHandle, 'Scale', 0.1, 10, true, 10);
 
   }
 
 }
-
