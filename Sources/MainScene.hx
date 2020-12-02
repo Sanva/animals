@@ -467,29 +467,39 @@ class MainScene extends Scene {
 
     if (ui.panel(Id.handle(), 'Rotating Rectangle')) {
 
+      ui.indent();
       this.blockGui.render(ui, this.scale);
+      ui.unindent();
 
     }
 
     if (ui.panel(Id.handle(), 'Concentric Circles')) {
 
+      ui.indent();
       this.concentricCirclesGui.render(ui, this.scale);
+      ui.unindent();
 
     }
 
     if (ui.panel(Id.handle(), 'Balls')) {
 
+      ui.indent();
       this.ballsGui.render(ui, this.scale);
+      ui.unindent();
 
     }
 
     if (ui.panel(Id.handle(), 'Grid')) {
 
+      ui.indent();
       this.debugGridGui.render(ui, this.scale);
+      ui.unindent();
 
     }
 
     if (ui.panel(Id.handle(), 'Audio')) {
+
+      ui.indent();
 
       ui.text('Our French Cafe');
 
@@ -519,35 +529,47 @@ class MainScene extends Scene {
 
       this.sound.volume = ui.slider(this.soundVolumeHandle, 'Volume', 0.0, 1.0, true);
 
+      ui.unindent();
+
     }
 
     if (ui.panel(Id.handle(), 'Shader Block')) {
 
+      ui.indent();
       this.shaderBlockGui.render(ui, this.scale);
+      ui.unindent();
 
     }
 
     if (ui.panel(Id.handle(), 'Sprite')) {
 
+      ui.indent();
       this.spriteGui.render(ui, this.scale);
+      ui.unindent();
 
     }
 
     if (ui.panel(Id.handle(), 'Textured Sprite')) {
 
+      ui.indent();
       this.spriteGui02.render(ui, this.scale);
+      ui.unindent();
 
     }
 
     if (ui.panel(Id.handle(), 'Tilesheet Sprite')) {
 
+      ui.indent();
       this.spriteGui03.render(ui, this.scale);
+      ui.unindent();
 
     }
 
     if (ui.panel(Id.handle(), 'Cube')) {
 
+      ui.indent();
       this.cubeGui.render(ui, this.scale);
+      ui.unindent();
 
     }
 
